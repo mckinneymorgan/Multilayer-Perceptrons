@@ -9,8 +9,12 @@ train_data = []
 test_data = []
 class_index = 1
 correct_predictions = 0
-hidden_layer_count = 0
-hidden_node_count = 0
+
+# Hyperparameters, tune as needed
+alpha = 0.5
+epochMax = 10
+hidden_layer_count = 1
+hidden_node_count = 5  # Same number of hidden nodes per layer
 
 # User input, read and store input csv files
 print("MULTILAYER PERCEPTRON \n")
@@ -24,7 +28,12 @@ train_data = np.array(train_data)
 test_data = np.array(test_data)
 
 # Train
+# Compute output
+inputs = train_data[1:]  # Copy all data except class label
+# Calculate deltas
 # Backpropagation
+# Update weights
+# Weight updates
 
 # Test
 # Predict labels

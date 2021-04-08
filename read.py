@@ -17,11 +17,9 @@ def read_file(file, data):
 # Normalize feature values to be 0 or 1
 def normalize(values):
     new_values = [int(x)/255 for x in values]
-    index = 0
-    for x in new_values:
-        if new_values[index] >= 0.5:
-            new_values[index] = 1
+    for i, item in enumerate(new_values):
+        if new_values[i] >= 0.5:
+            new_values[i] = 1
         else:
-            new_values[index] = 0
-        index += 1
+            new_values[i] = 0
     return new_values

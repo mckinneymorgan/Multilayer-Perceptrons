@@ -3,6 +3,7 @@
 import read
 import neural_network
 import numpy as np
+from random import random
 
 # Initialize variables
 train_data = []
@@ -38,6 +39,11 @@ train_features = np.array(train_features)
 train_labels = np.array(train_labels)
 test_features = np.array(test_features)
 test_labels = np.array(test_labels)
+
+# Initialize weights
+weights = []
+# for n in hidden_layer_count:
+# weights_1 = np.full((len(train_features), hidden_node_count), random())
 
 # Train
 # Compute output

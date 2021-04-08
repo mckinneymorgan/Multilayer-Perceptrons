@@ -24,19 +24,23 @@ train_data = read.read_file(train_file, train_data)
 test_data = read.read_file(test_file, test_data)
 
 # Separate class labels from features
-train_features = read.class_labels(train_data)
-test_features = read.class_labels(test_data)
+train_features = train_data[1:]
+train_labels = [element[0] for element in train_data]
+test_features = test_data[1:]
+test_labels = [element[0] for element in test_data]
 
-# Normalize data
+# Normalize feature values
+train_features = [read.normalize(element) for element in train_features]
+test_features = [read.normalize(element) for element in test_features]
 
-# Store data row-wise
-train_data = np.array(train_data)
-test_data = np.array(test_data)
+# Store features row-wise, convert lists to arrays
+train_features = np.array(train_features)
+train_labels = np.array(train_labels)
+test_features = np.array(test_features)
+test_labels = np.array(test_labels)
 
 # Train
 # Compute output
-inputs = train_data[1:]  # Copy all data except class label
-
 # Calculate deltas
 # Backpropagation
 # Update weights

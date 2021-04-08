@@ -14,7 +14,14 @@ def read_file(file, data):
     return data
 
 
-# Return class label list of given data
-def class_labels(data):
-    labels = [element[0] for element in data]
-    return labels
+# Normalize feature values to be 0 or 1
+def normalize(values):
+    new_values = [int(x)/255 for x in values]
+    index = 0
+    for x in new_values:
+        if new_values[index] >= 0.5:
+            new_values[index] = 1
+        else:
+            new_values[index] = 0
+        index += 1
+    return new_values

@@ -16,6 +16,8 @@ alpha = 0.5
 epochMax = 10
 hidden_layer_count = 1
 hidden_node_count = 2  # Same number of hidden nodes per layer
+output_node_count = 1
+total_layer_count = hidden_layer_count + 2  # Add input and output layers
 
 # User input, read and store input csv files
 print("MULTILAYER PERCEPTRON \n")
@@ -42,9 +44,17 @@ test_labels = np.array(test_labels)
 
 # Initialize weights
 weights = []
-# for n in hidden_layer_count:
-# weights_1 = np.full((len(train_features), hidden_node_count), random())
-
+for n in range(total_layer_count):
+    # Input layer
+    if n == 0:  # Matrix size = Feature count x hidden node count
+        weights.append(np.full((len(train_features), hidden_node_count), random()))
+    # Hidden layer(s)
+    elif n != total_layer_count-1:
+        weights.append(np.full((hidden_node_count, hidden_node_count), random()))
+    # Output layer
+    else:
+        weights.append(np.full((hidden_node_count, output_node_count), random()))
+print(weights)
 # Train
 # Compute output
 # Calculate deltas

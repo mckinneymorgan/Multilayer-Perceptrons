@@ -12,3 +12,9 @@ def read_file(file, data):
         data = list(read_csv)
 
     return data
+
+
+# Return class label list of given data
+def class_labels(data):
+    labels = [element[0] for element in data]
+    return labels

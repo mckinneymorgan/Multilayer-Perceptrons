@@ -14,7 +14,7 @@ correct_predictions = 0
 alpha = 0.5
 epochMax = 10
 hidden_layer_count = 1
-hidden_node_count = 5  # Same number of hidden nodes per layer
+hidden_node_count = 2  # Same number of hidden nodes per layer
 
 # User input, read and store input csv files
 print("MULTILAYER PERCEPTRON \n")
@@ -23,6 +23,12 @@ test_file = input("Enter testing csv file name: ")
 train_data = read.read_file(train_file, train_data)
 test_data = read.read_file(test_file, test_data)
 
+# Separate class labels from features
+train_features = read.class_labels(train_data)
+test_features = read.class_labels(test_data)
+
+# Normalize data
+
 # Store data row-wise
 train_data = np.array(train_data)
 test_data = np.array(test_data)
@@ -30,6 +36,7 @@ test_data = np.array(test_data)
 # Train
 # Compute output
 inputs = train_data[1:]  # Copy all data except class label
+
 # Calculate deltas
 # Backpropagation
 # Update weights

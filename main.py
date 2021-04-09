@@ -17,7 +17,7 @@ epochMax = 10
 hidden_layer_count = 1
 hidden_node_count = 2  # Same number of hidden nodes per layer
 output_node_count = 1
-total_layer_count = hidden_layer_count + 2  # Add input and output layers
+total_layer_count = hidden_layer_count + 1  # Add output layer
 
 # User input, read and store input csv files
 print("MULTILAYER PERCEPTRON \n")
@@ -36,7 +36,7 @@ test_labels = [element[0] for element in test_data]
 train_features = [read.normalize(element) for element in train_features]
 test_features = [read.normalize(element) for element in test_features]
 
-# Store features row-wise, convert lists to arrays
+# Store features row-wise, convert data to arrays
 train_features = np.array(train_features)
 train_labels = np.array(train_labels)
 test_features = np.array(test_features)
@@ -58,17 +58,26 @@ for n in range(total_layer_count):
     else:
         weights.append(np.full((hidden_node_count, output_node_count), random()))
         biases.append(np.full(output_node_count, random()))
-print(weights)
-print(biases)
 
 # Train
 for epoch in range(epochMax):
     meanSquaredError = []
-    for n, example in enumerate(train_features):
+    for i, example in enumerate(train_features):
         # Forward pass
-        inputs = train_features[n]
-        ground_truth = train_labels[n]
+        features = train_features[i]
+        ground_truth = train_labels[i]
         # Compute output
+        outputs = []
+        for n in range(total_layer_count):
+            if n == 0:
+                inputs = np.transpose(weights[n]) * features + biases[n]
+            else:
+                inputs = np.transpose(weights[n]) * outputs[n] + biases[n]
+            activation = np.array([neural_network.sigmoid(x) for x in inputs])
+            outputs.append(activation)
+        output = outputs[-1]  # Last output is final output for network
+        # Calculate error
+        error = ground_truth - output
         # Calculate deltas
         # Backpropagation
         # Calculate gradient

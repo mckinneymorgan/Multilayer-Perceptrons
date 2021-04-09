@@ -42,25 +42,38 @@ train_labels = np.array(train_labels)
 test_features = np.array(test_features)
 test_labels = np.array(test_labels)
 
-# Initialize weights
+# Initialize weights and biases
 weights = []
+biases = []
 for n in range(total_layer_count):
     # Input layer
-    if n == 0:  # Matrix size = Feature count x hidden node count
+    if n == 0:
         weights.append(np.full((len(train_features), hidden_node_count), random()))
+        biases.append(np.full(hidden_node_count, random()))
     # Hidden layer(s)
     elif n != total_layer_count-1:
         weights.append(np.full((hidden_node_count, hidden_node_count), random()))
+        biases.append(np.full(hidden_node_count, random()))
     # Output layer
     else:
         weights.append(np.full((hidden_node_count, output_node_count), random()))
+        biases.append(np.full(output_node_count, random()))
 print(weights)
+print(biases)
+
 # Train
-# Compute output
-# Calculate deltas
-# Backpropagation
-# Update weights
-# Weight updates
+for epoch in range(epochMax):
+    meanSquaredError = []
+    for n, example in enumerate(train_features):
+        # Forward pass
+        inputs = train_features[n]
+        ground_truth = train_labels[n]
+        # Compute output
+        # Calculate deltas
+        # Backpropagation
+        # Calculate gradient
+        # Update weights
+        # Weight updates
 
 # Test
 # Predict labels

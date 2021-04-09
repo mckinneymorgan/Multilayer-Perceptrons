@@ -61,13 +61,12 @@ for n in range(total_layer_count):
 
 # Train
 for epoch in range(epochMax):
-    meanSquaredError = []
     for i, example in enumerate(train_features):
         # Forward pass
         features = train_features[i]
         ground_truth = train_labels[i]
-        # Compute output
         outputs = []
+        # Compute output
         for n in range(total_layer_count):
             if n == 0:
                 inputs = np.transpose(weights[n]) * features + biases[n]
@@ -75,14 +74,26 @@ for epoch in range(epochMax):
                 inputs = np.transpose(weights[n]) * outputs[n] + biases[n]
             activation = np.array([neural_network.sigmoid(x) for x in inputs])
             outputs.append(activation)
-        output = outputs[-1]  # Last output is final output for network
+        output = outputs[-1]  # Output of network
         # Calculate error
         error = ground_truth - output
-        # Calculate deltas
         # Backpropagation
-        # Calculate gradient
+        deltas = []
+        # Calculate deltas
+        for n in range(total_layer_count):
+            if n == hidden_layer_count:
+                delta = error * output
+            else:
+                delta = (weights[n] * deltas[0]) * output[n]
+            deltas.insert(0, delta)
         # Update weights
-        # Weight updates
+        weights_temp = weights.copy()
+        biases_temp = biases.copy()
+        for n in range(total_layer_count):
+            for m, items in weights:
+                weights[n][m] = weights_temp[n][m] - alpha * outputs[n] * deltas[n]
+            for m, items in biases:
+                biases[n][m] = biases_temp[n][m] + alpha * deltas[n]
 
 # Test
 # Predict labels

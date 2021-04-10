@@ -21,8 +21,10 @@ total_layer_count = hidden_layer_count + 1  # Add output layer
 
 # User input, read and store input csv files
 print("MULTILAYER PERCEPTRON \n")
-train_file = input("Enter training csv file name: ")
-test_file = input("Enter testing csv file name: ")
+# train_file = input("Enter training csv file name: ")
+# test_file = input("Enter testing csv file name: ")
+train_file = 'mnist_train_0_1.csv'
+test_file = 'mnist_test_0_1.csv'
 train_data = read.read_file(train_file, train_data)
 test_data = read.read_file(test_file, test_data)
 
@@ -48,7 +50,7 @@ biases = []
 for n in range(total_layer_count):
     # Input layer
     if n == 0:
-        weights.append(np.full((len(train_features), hidden_node_count), random()))
+        weights.append(np.full((len(test_features[n]), hidden_node_count), random()))
         biases.append(np.full(hidden_node_count, random()))
     # Hidden layer(s)
     elif n != hidden_layer_count:
@@ -58,8 +60,8 @@ for n in range(total_layer_count):
     else:
         weights.append(np.full((hidden_node_count, output_node_count), random()))
         biases.append(np.full(output_node_count, random()))
-print("Biases: " + str(biases))
-print("Weights: " + str(weights))
+    print("Biases [" + str(n) + "]: " + str(biases[n].shape))
+    print("Weights [" + str(n) + "]: " + str(weights[n].shape))
 
 # Train
 for epoch in range(epochMax):
@@ -67,20 +69,22 @@ for epoch in range(epochMax):
         # Forward pass
         features = train_features[i]
         print("X: " + str(features.shape))
-        ground_truth = train_labels[i]
+        ground_truth = float(train_labels[i])
         print("Y: " + str(ground_truth))
         outputs = []
         # Compute output
         for n in range(total_layer_count):
             if n == 0:
-                inputs = np.transpose(weights[n]) * features + biases[n]
+                inputs = np.transpose(weights[n]).dot(features)
             else:
-                inputs = np.transpose(weights[n]) * outputs[n] + biases[n]
-            activation = np.array([neural_network.sigmoid(x) for x in inputs])
-            outputs.append(activation)
-        output = outputs[-1]  # Output of network
+                inputs = np.transpose(weights[n]).dot(outputs[n-1])
+            inputs = inputs + biases[n]
+            activation = [neural_network.sigmoid(x) for x in inputs]
+            outputs.append(np.array(activation))
+        output = float(outputs[-1])  # Output of network
         # Calculate error
         error = ground_truth - output
+        print("Error: " + str(error))
         # Backpropagation
         deltas = []
         # Calculate deltas

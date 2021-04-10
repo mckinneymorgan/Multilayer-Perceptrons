@@ -51,20 +51,24 @@ for n in range(total_layer_count):
         weights.append(np.full((len(train_features), hidden_node_count), random()))
         biases.append(np.full(hidden_node_count, random()))
     # Hidden layer(s)
-    elif n != total_layer_count-1:
+    elif n != hidden_layer_count:
         weights.append(np.full((hidden_node_count, hidden_node_count), random()))
         biases.append(np.full(hidden_node_count, random()))
     # Output layer
     else:
         weights.append(np.full((hidden_node_count, output_node_count), random()))
         biases.append(np.full(output_node_count, random()))
+print("Biases: " + str(biases))
+print("Weights: " + str(weights))
 
 # Train
 for epoch in range(epochMax):
     for i, example in enumerate(train_features):
         # Forward pass
         features = train_features[i]
+        print("X: " + str(features.shape))
         ground_truth = train_labels[i]
+        print("Y: " + str(ground_truth))
         outputs = []
         # Compute output
         for n in range(total_layer_count):

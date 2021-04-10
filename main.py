@@ -75,12 +75,11 @@ for epoch in range(epochMax):
         # Compute output
         for n in range(total_layer_count):
             if n == 0:
-                inputs = np.transpose(weights[n]).dot(features)
+                inputs = np.transpose(weights[n]).dot(features) + biases[n]
             else:
-                inputs = np.transpose(weights[n]).dot(outputs[n-1])
-            inputs = inputs + biases[n]
-            activation = [neural_network.sigmoid(x) for x in inputs]
-            outputs.append(np.array(activation))
+                inputs = np.transpose(weights[n]).dot(outputs[n-1]) + biases[n]
+            neural_network.sigmoid(np.array(inputs))  # Activation
+            outputs.append(inputs)
         output = float(outputs[-1])  # Output of network
         # Calculate error
         error = ground_truth - output
@@ -88,12 +87,12 @@ for epoch in range(epochMax):
         # Backpropagation
         deltas = []
         # Calculate deltas
-        for n in range(total_layer_count):
+        for n in reversed(range(total_layer_count)):
             if n == hidden_layer_count:
                 delta = error * output
             else:
-                delta = (weights[n] * deltas[0]) * output[n]
-            deltas.insert(0, delta)
+                delta = (weights[n] * deltas[0]) * outputs[n]
+            deltas.insert(0, np.array(delta))
         # Update weights
         weights_temp = weights.copy()
         biases_temp = biases.copy()

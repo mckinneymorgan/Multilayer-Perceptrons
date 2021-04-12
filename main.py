@@ -12,7 +12,7 @@ class_index = 1
 correct_predictions = 0
 
 # Hyperparameters, tune as needed
-alpha = 0.000000001
+alpha = 0.0000000001
 epochMax = 1
 hidden_layer_count = 1
 hidden_node_count = 2  # Same number of hidden nodes per layer
@@ -50,16 +50,22 @@ biases = []
 for n in range(total_layer_count):
     # Input layer
     if n == 0:
-        weights.append(np.random.rand(len(test_features[n]), hidden_node_count))
-        biases.append(np.random.rand(hidden_node_count, 1))
+        size_weights = (len(test_features[n]), hidden_node_count)
+        size_biases = (hidden_node_count, 1)
+        weights.append(np.random.uniform(-1, 1, size_weights))
+        biases.append(np.random.uniform(-1, 1, size_biases))
     # Hidden layer(s)
     elif n != hidden_layer_count:
-        weights.append(np.random.rand(hidden_node_count, hidden_node_count))
-        biases.append(np.random.rand(hidden_node_count, 1))
+        size_weights = (hidden_node_count, hidden_node_count)
+        size_biases = (hidden_node_count, 1)
+        weights.append(np.random.uniform(-1, 1, size_weights))
+        biases.append(np.random.uniform(-1, 1, size_biases))
     # Output layer
     else:
-        weights.append(np.random.rand(hidden_node_count, output_node_count))
-        biases.append(np.random.rand(output_node_count, 1))
+        size_weights = (hidden_node_count, output_node_count)
+        size_biases = (output_node_count, 1)
+        weights.append(np.random.uniform(-1, 1, size_weights))
+        biases.append(np.random.uniform(-1, 1, size_biases))
     print("Biases [" + str(n) + "]: " + str(biases[n].shape))
     print("Weights [" + str(n) + "]: " + str(weights[n].shape))
 
@@ -85,7 +91,9 @@ for epoch in range(epochMax):
         output = float(outputs[-1])  # Output of network
         # Calculate error
         error = ground_truth - output
-        print("Error: " + str(error))
+        # print("Error: " + str(error))
+        if -0.005 < error < 0.005:  # Stop training once low error achieved
+            break
         # Backpropagation
         deltas = []
         # Calculate deltas

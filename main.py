@@ -12,8 +12,8 @@ class_index = 1
 correct_predictions = 0
 
 # Hyperparameters, tune as needed
-alpha = 0.05
-epochMax = 10
+alpha = 0.000000001
+epochMax = 1
 hidden_layer_count = 1
 hidden_node_count = 2  # Same number of hidden nodes per layer
 output_node_count = 1
@@ -50,16 +50,16 @@ biases = []
 for n in range(total_layer_count):
     # Input layer
     if n == 0:
-        weights.append(np.full((len(test_features[n]), hidden_node_count), random()))
-        biases.append(np.full(hidden_node_count, random()))
+        weights.append(np.random.rand(len(test_features[n]), hidden_node_count))
+        biases.append(np.random.rand(hidden_node_count, 1))
     # Hidden layer(s)
     elif n != hidden_layer_count:
-        weights.append(np.full((hidden_node_count, hidden_node_count), random()))
-        biases.append(np.full(hidden_node_count, random()))
+        weights.append(np.random.rand(hidden_node_count, hidden_node_count))
+        biases.append(np.random.rand(hidden_node_count, 1))
     # Output layer
     else:
-        weights.append(np.full((hidden_node_count, output_node_count), random()))
-        biases.append(np.full(output_node_count, random()))
+        weights.append(np.random.rand(hidden_node_count, output_node_count))
+        biases.append(np.random.rand(output_node_count, 1))
     print("Biases [" + str(n) + "]: " + str(biases[n].shape))
     print("Weights [" + str(n) + "]: " + str(weights[n].shape))
 
@@ -68,17 +68,20 @@ for epoch in range(epochMax):
     for i, example in enumerate(train_features):
         # Forward pass
         features = train_features[i]
-        print("X: " + str(features.shape))
+        # print("X: " + str(features.shape))
         ground_truth = float(train_labels[i])
         outputs = []
         # Compute output
         for n in range(total_layer_count):
-            if n == 0:
-                inputs = np.transpose(weights[n]).dot(features) + biases[n]
+            if n == 0:  # Size hidden_node_count x 1
+                product = np.transpose(weights[n]).dot(features)
             else:
-                inputs = np.transpose(weights[n]).dot(outputs[n - 1]) + biases[n]
+                product = np.transpose(weights[n]).dot(outputs[n - 1])
+            inputs = product + np.transpose(biases[n])
+            inputs = np.transpose(inputs)
             neural_network.sigmoid(np.array(inputs))  # Activation
             outputs.append(inputs)
+            # print("Outputs [" + str(n) + "]: " + str(outputs[n].shape))
         output = float(outputs[-1])  # Output of network
         # Calculate error
         error = ground_truth - output
@@ -87,12 +90,12 @@ for epoch in range(epochMax):
         deltas = []
         # Calculate deltas
         for n in reversed(range(total_layer_count)):
-            if n == hidden_layer_count:
+            if n == hidden_layer_count:  # Scalar
                 delta = error * (output * (1 - output))
-            else:
-                delta = weights[n + 1].dot(deltas[0]) * (outputs[n].dot(1 - outputs[n]))
+            else:  # Size hidden_node_count x 1
+                delta = weights[n + 1].dot(deltas[0]) * (outputs[n] * (1 - outputs[n]))
             deltas.insert(0, np.array(delta))
-            print("Delta [" + str(n) + "]: " + str(deltas[0].shape))
+            # print("Delta [" + str(n) + "]: " + str(deltas[0].shape))
         # Update weights
         weights_temp = weights.copy()
         biases_temp = biases.copy()
@@ -101,8 +104,12 @@ for epoch in range(epochMax):
                 weights[n] = weights_temp[n] + alpha * outputs[n - 1] * deltas[n]
                 biases[n] = biases_temp[n] + alpha * deltas[n]
             else:
-                weights[n] = weights_temp[n] + alpha * features.dot(np.transpose(deltas[n]))
+                weights[n] = weights_temp[n] + np.transpose(alpha * (features * deltas[n]))
                 biases[n] = biases_temp[n] + alpha * deltas[n]
+        # print("Weights:")
+        # print(weights)
+        # print("Biases:")
+        # print(biases)
 
 # Test
 # Predict labels

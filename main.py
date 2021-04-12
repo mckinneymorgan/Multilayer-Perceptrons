@@ -12,8 +12,8 @@ class_index = 1
 correct_predictions = 0
 
 # Hyperparameters, tune as needed
-alpha = 0.00000001
-epochMax = 5
+alpha = 0.000000001
+epochMax = 1
 hidden_layer_count = 1
 hidden_node_count = 2  # Same number of hidden nodes per layer
 output_node_count = 1
@@ -130,12 +130,16 @@ for i, example in enumerate(test_features):
         # print("Outputs [" + str(n) + "]: " + str(outputs[n].shape))
     output = float(outputs[-1])  # Output of network
     prediction = round(output)
+    if prediction >= 0.5:  # Normalize output
+        prediction = 1
+    else:
+        prediction = 0
     # Check for accuracy
     if ground_truth == prediction:
         correct_predictions += 1
 
 # Report overall accuracy, percentage of test set accurately predicted
-accuracy = (correct_predictions / len(test_data)) * 100
+accuracy = (float(correct_predictions) / float(len(test_data))) * 100
 print("Overall accuracy: " + str(accuracy))
 # Report architecture
 print("Number of hidden layers: " + str(hidden_layer_count))

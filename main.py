@@ -11,7 +11,7 @@ class_index = 1
 correct_predictions = 0
 
 # Hyperparameters, tune as needed
-alpha = 0.0000000001
+alpha = 0.0001
 epochMax = 1
 hidden_layer_count = 1
 hidden_node_count = 2  # Same number of hidden nodes per layer

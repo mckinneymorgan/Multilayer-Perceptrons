@@ -3,7 +3,6 @@
 import read
 import neural_network
 import numpy as np
-from random import random
 
 # Initialize variables
 train_data = []
@@ -21,10 +20,8 @@ total_layer_count = hidden_layer_count + 1  # Add output layer
 
 # User input, read and store input csv files
 print("MULTILAYER PERCEPTRON \n")
-# train_file = input("Enter training csv file name: ")
-# test_file = input("Enter testing csv file name: ")
-train_file = 'mnist_train_0_1.csv'
-test_file = 'mnist_test_0_1.csv'
+train_file = input("Enter training csv file name: ")
+test_file = input("Enter testing csv file name: ")
 train_data = read.read_file(train_file, train_data)
 test_data = read.read_file(test_file, test_data)
 
@@ -91,8 +88,9 @@ for epoch in range(epochMax):
         output = float(outputs[-1])  # Output of network
         # Calculate error
         error = ground_truth - output
-        # print("Error: " + str(error))
-        if -0.005 < error < 0.005:  # Stop training once low error achieved
+        if i % 100 == 0:  # Print error in intervals
+            print("Error: " + str(error))
+        if -0.05 < error < 0.05:  # Stop training once low error achieved
             break
         # Backpropagation
         deltas = []
